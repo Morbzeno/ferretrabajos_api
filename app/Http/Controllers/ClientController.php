@@ -72,18 +72,18 @@ class ClientController extends Controller
     public function update(Request $request, $id){
         $client = Client::find($id);
         $request->validate([
-            'name' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins',
-            'password' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'socialMedia' => 'required|string|max:255',
-            'phone' => 'required|integer',
-            'status' => 'required|string|max:255',
-            'address' => 'required|string|max:255'
+            'name' => 'sometimes|string|max:255',
+            'lastName' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:admins',
+            'password' => 'sometimes|string|max:255',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'socialMedia' => 'sometimes|string|max:255',
+            'phone' => 'sometimes|integer',
+            'status' => 'sometimes|string|max:255',
+            'address' => 'sometimes|string|max:255'
              // Validación de image
         ]);
-    $client->update($request->only(['name', 'lastname', 'socialMedia', 'phone','address']));
+    $client->update($request->only(['name', 'lastName', 'email', 'password', 'image', 'socialMedia', 'phone', 'status', 'address']));
     if ($request->filled('password')) {
         $client->password = Hash::make($request->password);
     }

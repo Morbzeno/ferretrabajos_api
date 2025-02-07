@@ -68,16 +68,16 @@ class WorkerController extends Controller
     public function update(Request $request, $id){
         $worker = Worker::find($id);
         $request->validate([
-            'name' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
-            'age' => 'required|integer',
-            'email' => 'required|email|unique:admins',
-            'password' => 'required|string|max:255',
+            'name' => 'sometimes|string|max:255',
+            'lastName' => 'sometimes|string|max:255',
+            'age' => 'sometimes|integer',
+            'email' => 'sometimes|email|unique:admins',
+            'password' => 'sometimes|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'RFC' => 'required|string|max:255',
-            'Especiality' => 'required|string|max:255' // Validación de image
+            'RFC' => 'sometimes|string|max:255',
+            'Especiality' => 'sometimes|string|max:255' // Validación de image
         ]);
-    $worker->update($request->only(['nombre', 'lastname', 'age', 'RFC','Especiality']));
+    $worker->update($request->only(['name', 'lastName', 'age', 'email', 'password', 'image', 'RFC', 'Especiality']));
     if ($request->filled('password')) {
         $worker->password = Hash::make($request->password);
     }

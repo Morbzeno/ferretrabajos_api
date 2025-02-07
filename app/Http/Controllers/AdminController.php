@@ -84,7 +84,7 @@ class AdminController extends Controller
             'address' => 'sometimes|string|max:255'
              // Validación de image
         ]);
-    $admin->update($request->only(['name', 'lastname', 'socialMedia', 'phone','address']));
+    $admin->update($request->only(['name', 'lastName', 'email', 'password', 'image', 'socialMedia', 'phone', 'status', 'address']));
     if ($request->filled('password')) {
         $admin->password = Hash::make($request->password);
     }
@@ -94,6 +94,7 @@ class AdminController extends Controller
         $ruta = $image->storeAs('clients', $nombreImagen, 'public');
         $admin->image = $ruta;
     }
+    $admin->save();
     return response()->json([
         'message' => 'Admin actualizado correctamente',
         'data' => $admin

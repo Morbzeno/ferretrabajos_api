@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\WorkerController;
 /*
 |--------------------------------------------------------------------------
@@ -34,19 +34,32 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/admins', [AdminController::class, 'index']);
+Route::get('/admins/{id}', [AdminController::class, 'show']);
 Route::post('/admins', [AdminController::class, 'store']); 
 Route::delete('/admins/{id}', [AdminController::class, 'destroy']);
 Route::put('/admins/{id}', [AdminController::class, 'update']); // Actualizar
 
-Route::post('/login', [RegisterController::class, 'login']);
-Route::post('/register', [RegisterController::class, 'register']);
+Route::post('/register', [AuthAdminController::class, 'register']);
+Route::post('/login', [AuthAdminController::class, 'login']);
 
-Route::get('/clients', [ClientController::class, 'index']);
-Route::post('/clients', [ClientController::class, 'store']); 
-Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
-Route::put('/clients/{id}', [ClientController::class, 'update']); // Actualizar
+
+
+Route::middleware(['auth.client'])->group(function () {
+    Route::get('/clients', [ClientController::class, 'index']);
+    Route::get('/clients/{id}', [ClientController::class, 'show']);
+    Route::post('/clients', [ClientController::class, 'store']);
+    Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
+    Route::put('/clients/{id}', [ClientController::class, 'update']);
+});
 
 Route::get('/workers', [WorkerController::class, 'index']);
+Route::get('/workers/{id}', [WorkerController::class, 'show']);
 Route::post('/workers', [WorkerController::class, 'store']); 
 Route::delete('/workers/{id}', [WorkerController::class, 'destroy']);
 Route::put('/workers/{id}', [WorkerController::class, 'update']); // Actualizar
+
+Route::post('/tokens/create', function (Request $request) {
+    $token = $request->user()->createToken($request->token_name);
+ 
+    return ['token' => $token->plainTextToken];
+});
