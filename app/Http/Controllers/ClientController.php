@@ -23,13 +23,13 @@ class ClientController extends Controller
     // Crear un nuevo Client
     public function store(Request $request)
     {
-        // Validar los datos, incluyendo la image
+       // Validar los datos, incluyendo la image
         $request->validate([
             'name' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
             'email' => 'required|email|unique:admins',
             'password' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|max:2048',
             'socialMedia' => 'required|string|max:255',
             'phone' => 'required|integer',
             'status' => 'required|string|max:255',
@@ -51,9 +51,10 @@ class ClientController extends Controller
         // Verificar si hay una image en la solicitud
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $nombreImagen = time() . '_' . $image->getClientOriginalName();
-            $ruta = $image->storeAs('admins', $nombreImagen, 'public'); // Guardar en storage/app/public/admins
-            $client->image = $ruta; // Guardar la ruta en la base de datos
+            $nombreImagen = time() . '_' . $image->extension();
+            $ruta = $image->storeAs('images/clients', $nombreImagen, 'public'); // Guardar en storage/app/public/admins
+            $rutaCompleta = asset('storage/' . $ruta);
+            $client->image = $rutaCompleta; // Guardar la ruta en la base de datos
         }
     
         // Guardar en la base de datos
@@ -74,9 +75,8 @@ class ClientController extends Controller
         $request->validate([
             'name' => 'sometimes|string|max:255',
             'lastName' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:admins',
             'password' => 'sometimes|string|max:255',
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'sometimes',
             'socialMedia' => 'sometimes|string|max:255',
             'phone' => 'sometimes|integer',
             'status' => 'sometimes|string|max:255',

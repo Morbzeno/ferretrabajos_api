@@ -44,13 +44,13 @@ Route::post('/login', [AuthAdminController::class, 'login']);
 
 
 
-Route::middleware(['auth.client'])->group(function () {
+// Route::middleware(['auth.client'])->group(function () {
     Route::get('/clients', [ClientController::class, 'index']);
     Route::get('/clients/{id}', [ClientController::class, 'show']);
     Route::post('/clients', [ClientController::class, 'store']);
     Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
     Route::put('/clients/{id}', [ClientController::class, 'update']);
-});
+// });
 
 Route::get('/workers', [WorkerController::class, 'index']);
 Route::get('/workers/{id}', [WorkerController::class, 'show']);
