@@ -80,7 +80,6 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'sometimes|string|max:255',
             'lastName' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:admins',
             'password' => 'sometimes|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'socialMedia' => 'sometimes|string|max:255',
@@ -89,7 +88,7 @@ class AdminController extends Controller
             'address' => 'sometimes|string|max:255'
              // Validación de image
         ]);
-    $admin->update($request->only(['name', 'lastName', 'email', 'password', 'image', 'socialMedia', 'phone', 'status', 'address']));
+    $admin->update($request->only(['name', 'lastName', 'password', 'image', 'socialMedia', 'phone', 'status', 'address']));
     if ($request->filled('password')) {
         $admin->password = Hash::make($request->password);
     }
