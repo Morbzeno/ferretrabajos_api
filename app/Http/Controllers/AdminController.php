@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+
 
 class AdminController extends Controller
 {
@@ -50,10 +52,13 @@ class AdminController extends Controller
 
     // Verificar si hay una image en la solicitud
     if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        $nombreImagen = time() . '_' . $image->getClientOriginalName();
-        $ruta = $image->storeAs('admins', $nombreImagen, 'public'); // Guardar en storage/app/public/admins
-        $admin->image = $ruta; // Guardar la ruta en la base de datos
+        $img = $request->file('image');
+        $nuevoNombre = 'admin' . $admin->id . '.' . $img->extension();
+        $ruta = $img->storeAs('images/admins', $nuevoNombre, 'public');
+        $rutaCompleta = asset('storage/' . $ruta);
+
+        $admin->image = $rutaCompleta;
+        $admin->save();
     }
 
     // Guardar en la base de datos
@@ -89,11 +94,15 @@ class AdminController extends Controller
         $admin->password = Hash::make($request->password);
     }
     if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        $nombreImagen = time() . '_' . $image->getClientOriginalName();
-        $ruta = $image->storeAs('clients', $nombreImagen, 'public');
-        $admin->image = $ruta;
+        $img = $request->file('image');
+        $nuevoNombre = 'admin' . $admin->id . '.' . $img->extension();
+        $ruta = $img->storeAs('images/admins', $nuevoNombre, 'public');
+        $rutaCompleta = asset('storage/' . $ruta);
+
+        $admin->image = $rutaCompleta;
+        $admin->save();
     }
+    
     $admin->save();
     return response()->json([
         'message' => 'Admin actualizado correctamente',

@@ -48,8 +48,10 @@ class WorkerController extends Controller
         // Verificar si hay una imagen en la solicitud
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $ruta = $image->store('admins', 'public'); // Almacena en storage/app/public/admins
-            $worker->image = $ruta;
+            $nombreImagen = time() . '_' . $image->extension();
+            $ruta = $image->storeAs('images/worker', $nombreImagen, 'public'); // Guardar en storage/app/public/admins
+            $rutaCompleta = asset('storage/' . $ruta);
+            $worker->image = $rutaCompleta; // Guardar la ruta en la base de datos
         }
     
         // Guardar en la base de datos
@@ -67,24 +69,20 @@ class WorkerController extends Controller
         return response()->json(['message' => 'Worker eliminado correctamente'], 200);
     }
     public function update(Request $request, $id) {
-        $worker = Worker::find($id);
-    
-        if (!$worker) {
-            return response()->json(['message' => 'Worker no encontrado'], 404);
-        }
+        $worker = Worker::findOrFail($id);
     
         $request->validate([
-            'firstName' => 'sometimes|string|max:255',
-            'lastName' => 'sometimes|string|max:255',
-            'age' => 'sometimes|integer',
-            'email' => "sometimes|email",
-            'password' => 'sometimes|string|min:6|max:255',
-            'image' => 'nullable',
-            'RFC' => 'sometimes|string|max:255',
-            'specialty' => 'sometimes|string|max:255'
+            'name' => 'string|max:255',
+            'lastName' => 'string|max:255',
+            'age' => 'integer',
+            'email' => 'email',
+            'password' => 'string|min:6|max:255',
+            'image' => '',
+            'rfc' => 'string|max:255',
+            'specialty' => 'string|max:255'
         ]);
     
-        // Actualizar los datos excepto la imagen y la contraseña
+        // Actualizar datos excepto la imagen y la contraseña
         $worker->update($request->except(['password', 'image']));
     
         // Si se envía una nueva contraseña, la encripta y guarda
@@ -92,15 +90,18 @@ class WorkerController extends Controller
             $worker->password = Hash::make($request->password);
         }
     
-        // Si se envía una nueva imagen, la almacena y actualiza la BD
+        // Si se envía una nueva imagen, elimina la anterior y guarda la nueva
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $nombreImagen = time() . '_' . $image->getClientOriginalName();
-            $ruta = $image->storeAs('clients', $nombreImagen, 'public');
-            $worker->image = $ruta;
+            $img = $request->file('image');
+            $nuevoNombre = 'worker' . $worker->id . '.' . $img->extension();
+            $ruta = $img->storeAs('images/workers', $nuevoNombre, 'public');
+            $rutaCompleta = asset('storage/' . $ruta);
+    
+            $worker->image = $rutaCompleta;
+            $worker->save();
         }
     
-        // Guardar los cambios en la base de datos
+        // Guardar cambios
         $worker->save();
     
         return response()->json([
@@ -108,5 +109,6 @@ class WorkerController extends Controller
             'data' => $worker
         ], 200);
     }
+    
     
 }

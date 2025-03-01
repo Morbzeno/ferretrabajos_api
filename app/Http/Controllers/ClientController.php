@@ -88,11 +88,14 @@ class ClientController extends Controller
         $client->password = Hash::make($request->password);
     }
 
-    if ($request->hasFile('imagen')) {
-        $imagen = $request->file('imagen');
-        $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
-        $ruta = $imagen->storeAs('clients', $nombreImagen, 'public');
-        $client->imagen = $ruta;
+    if ($request->hasFile('image')) {
+        $img = $request->file('image');
+        $nuevoNombre = 'clients' . $client->id . '.' . $img->extension();
+        $ruta = $img->storeAs('images/clients', $nuevoNombre, 'public');
+        $rutaCompleta = asset('storage/' . $ruta);
+
+        $client->image = $rutaCompleta;
+        $client->save();
     }
 
 
