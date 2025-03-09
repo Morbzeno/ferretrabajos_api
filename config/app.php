@@ -155,6 +155,7 @@ return [
     */
 
     'providers' => [
+        MongoDB\Laravel\MongoDBServiceProvider::class,
 
         /*
          * Laravel Framework Service Providers...
@@ -181,7 +182,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
         /*
          * Package Service Providers...
          */
@@ -210,6 +210,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'MongoDB' => Jenssegers\Mongodb\MongodbServiceProvider::class,
     ])->toArray(),
 
 ];

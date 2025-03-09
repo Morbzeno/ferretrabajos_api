@@ -8,16 +8,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WorkerController;
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\CartController;
 Route::get('/ping', function (Request $request) {    
     $connection = DB::connection('mongodb');
     $msg = 'MongoDB is accessible!';
@@ -42,6 +33,7 @@ Route::post('/admins/{id}', [AdminController::class, 'update']); // Actualizar
 
 Route::post('/register', [AuthAdminController::class, 'register']);
 Route::post('/login', [AuthAdminController::class, 'login']);
+Route::post('/logout', [AuthAdminController::class, 'logout']);
 
 Route::post('/client/register', [AuthController::class, 'register']);
 Route::post('/client/login', [AuthController::class, 'login']);
@@ -66,4 +58,11 @@ Route::post('/tokens/create', function (Request $request) {
     $token = $request->user()->createToken($request->token_name);
  
     return ['token' => $token->plainTextToken];
+});
+
+Route::prefix('cart')->group(function () {
+    Route::get('/{client_id}', [CartController::class, 'show']);
+    Route::post('/{client_id}/add', [CartController::class, 'addWorker']);
+    Route::post('/{client_id}/remove', [CartController::class, 'removeWorker']);
+    Route::post('/{client_id}/clear', [CartController::class, 'clearCart']);
 });
