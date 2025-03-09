@@ -28,7 +28,7 @@ Route::get('/admins', [AdminController::class, 'index']);
 Route::get('/admins/{id}', [AdminController::class, 'show']);
 Route::post('/admins', [AdminController::class, 'store']); 
 Route::delete('/admins/{id}', [AdminController::class, 'destroy']);
-Route::put('/admins/{id}', [AdminController::class, 'update']); // Actualizar
+Route::post('/admins/{id}', [AdminController::class, 'update']); // Actualizar
 
 Route::post('/register', [AuthAdminController::class, 'register']);
 Route::post('/login', [AuthAdminController::class, 'login']);
@@ -41,14 +41,14 @@ Route::post('/logout', [AuthAdminController::class, 'logout']);
     Route::get('/clients/{id}', [ClientController::class, 'show']);
     Route::post('/clients', [ClientController::class, 'store']);
     Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
-    Route::put('/clients/{id}', [ClientController::class, 'update']);
+    Route::post('/clients/{id}', [ClientController::class, 'update']);
 // });
 
 Route::get('/workers', [WorkerController::class, 'index']);
 Route::get('/workers/{id}', [WorkerController::class, 'show']);
 Route::post('/workers', [WorkerController::class, 'store']); 
 Route::delete('/workers/{id}', [WorkerController::class, 'destroy']);
-Route::put('/workers/{id}', [WorkerController::class, 'update']); // Actualizarz
+Route::post('/workers/{id}', [WorkerController::class, 'update']); // Actualizar
 
 Route::post('/tokens/create', function (Request $request) {
     $token = $request->user()->createToken($request->token_name);
