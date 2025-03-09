@@ -23,7 +23,7 @@ class AuthAdminController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'socialMedia' => 'required|string|max:255',
             'phone' => 'required|integer',
-            'status' => 'required|string|max:255',
+            'status' => '',
             'address' => 'required|string|max:255'
              // Validación de image
         ]);

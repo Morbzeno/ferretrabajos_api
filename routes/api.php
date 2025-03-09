@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AuthAdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WorkerController;
 /*
 |--------------------------------------------------------------------------
@@ -42,15 +43,18 @@ Route::post('/admins/{id}', [AdminController::class, 'update']); // Actualizar
 Route::post('/register', [AuthAdminController::class, 'register']);
 Route::post('/login', [AuthAdminController::class, 'login']);
 
+Route::post('/client/register', [AuthController::class, 'register']);
+Route::post('/client/login', [AuthController::class, 'login']);
 
 
-// Route::middleware(['auth.client'])->group(function () {
+
+//  Route::middleware(['auth.client'])->group(function () {
     Route::get('/clients', [ClientController::class, 'index']);
     Route::get('/clients/{id}', [ClientController::class, 'show']);
     Route::post('/clients', [ClientController::class, 'store']);
     Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
     Route::post('/clients/{id}', [ClientController::class, 'update']);
-// });
+//  });
 
 Route::get('/workers', [WorkerController::class, 'index']);
 Route::get('/workers/{id}', [WorkerController::class, 'show']);
